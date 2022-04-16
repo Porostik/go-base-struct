@@ -9,7 +9,19 @@ import (
 	"architecture/pkg/client/postgres"
 	"context"
 	"log"
+
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "architecture/docs"
 )
+
+// @title Swagger API
+// @version 1.0
+// @description Swagger API for Golang Project.
+// @termsOfService http://swagger.io/terms/
+
+// @BasePath /api/
 
 func main() {
 	config := config.GetConfig()
@@ -24,7 +36,11 @@ func main() {
 	services := service.NewServices(repos)
 	handlers := handler.NewHandler(services)
 
-	server := http_server.NewServer(config, handlers.Init())
+	router := handlers.Init()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	server := http_server.NewServer(config, router)
 
 	server.Start()
 }

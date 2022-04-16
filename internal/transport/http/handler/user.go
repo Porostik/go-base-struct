@@ -23,6 +23,12 @@ func NewUserHandler(service UserService) *UserHandler {
 	}
 }
 
+// GetUser godoc
+// @Summary Retrieves user based on given ID
+// @Produce json
+// @Param id path integer true "User ID"
+// @Success 200 {object} core.User
+// @Router /users/{id} [get]
 func (h *UserHandler) Get(c *gin.Context) {
 	paramId := c.Param("id")
 
@@ -42,7 +48,7 @@ func (h *UserHandler) Get(c *gin.Context) {
 }
 
 func (u *UserHandler) Init(api *gin.RouterGroup) {
-	user := api.Group("/user")
+	user := api.Group("/users")
 	{
 		user.GET("/:id", u.Get)
 	}
